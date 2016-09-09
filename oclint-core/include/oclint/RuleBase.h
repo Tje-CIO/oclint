@@ -4,6 +4,8 @@
 #include <string>
 
 #include "oclint/RuleCarrier.h"
+#include "oclint/RulesBaseId.h"
+#include "../../../oclint-rules/include/oclint/util/StdUtil.h"
 
 namespace oclint
 {
@@ -28,6 +30,10 @@ public:
     }
     virtual const std::string category() const = 0;
     virtual int priority() const = 0;
+    const std::string id() const
+    {
+    	return toString<int>(RulesBaseId::getInstance().getIdForRule( name() ));
+    }
 };
 
 } // end namespace oclint

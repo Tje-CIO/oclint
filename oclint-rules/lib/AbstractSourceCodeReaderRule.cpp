@@ -18,6 +18,7 @@ void AbstractSourceCodeReaderRule::apply()
 
     llvm::StringRef remaining = mainFileStringRef;
     int currentLineNumber = 1;
+    setUp();
     while (remaining.size() > 0)
     {
         std::pair<llvm::StringRef, llvm::StringRef> splitPair = remaining.split('\n');
@@ -25,6 +26,7 @@ void AbstractSourceCodeReaderRule::apply()
         eachLine(currentLineNumber++, currentLine.str());
         remaining = splitPair.second;
     }
+    tearDown();
 }
 
 void AbstractSourceCodeReaderRule::addViolation(int startLine, int startColumn,

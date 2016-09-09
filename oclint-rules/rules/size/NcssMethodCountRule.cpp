@@ -11,10 +11,13 @@ using namespace oclint;
 class NcssMethodCountRule : public AbstractASTVisitorRule<NcssMethodCountRule>
 {
 private:
+	// Définition du seuil
+	int thresholdValue = 80;
+
     void applyDecl(Decl *decl)
     {
         int ncss = getNcssCount(decl);
-        int threshold = RuleConfiguration::intForKey("NCSS_METHOD", 30);
+        int threshold = RuleConfiguration::intForKey("NCSS_METHOD", thresholdValue);
         if (ncss > threshold)
         {
             string description = "Method of " + toString<int>(ncss) +
@@ -31,18 +34,12 @@ public:
 
     virtual int priority() const override
     {
-        return 2;
+        return 1;
     }
 
     virtual const string category() const override
     {
         return "size";
-    }
-
-    bool VisitObjCMethodDecl(ObjCMethodDecl *decl)
-    {
-        applyDecl(decl);
-        return true;
     }
 
     bool VisitFunctionDecl(FunctionDecl *decl)

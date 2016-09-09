@@ -1,4 +1,5 @@
 #include <stack>
+#include <algorithm>
 
 #include "oclint/AbstractASTVisitorRule.h"
 #include "oclint/RuleConfiguration.h"
@@ -13,6 +14,9 @@ class ShortVariableNameRule : public AbstractASTVisitorRule<ShortVariableNameRul
 {
 private:
     std::stack<VarDecl *> _suppressVarDecls;
+    int thresholdValue = 3;
+    std::vector<std::string> exceptionList{"i", "j", "k", "l"};
+
 
     void clearVarDeclsStack()
     {
@@ -69,9 +73,13 @@ public:
 
     bool VisitVarDecl(VarDecl *varDecl)
     {
-        int nameLength = varDecl->getNameAsString().size();
-        int threshold = RuleConfiguration::intForKey("SHORT_VARIABLE_NAME", 3);
-        if (nameLength <= 0 || nameLength >= threshold)
+        bool isAnException;
+    	string varName = varDecl->getNameAsString();
+		int nameLength = varDecl->getNameAsString().size();
+        int threshold = RuleConfiguration::intForKey("SHORT_VARIABLE_NAME", thresholdValue);
+        isAnException = (std::find(std::begin(exceptionList), std::end(exceptionList), varName) != std::end(exceptionList));
+
+        if (nameLength <= 0 || nameLength >= threshold || isAnException)
         {
             return true;
         }
@@ -86,7 +94,7 @@ public:
             }
         }
 
-        string description = "Variable name with " + toString<int>(nameLength) +
+        string description = varName + " : variable name with " + toString<int>(nameLength) +
             " characters is shorter than the threshold of " + toString<int>(threshold);
         addViolation(varDecl, this, description);
 

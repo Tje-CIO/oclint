@@ -6,9 +6,13 @@ SET(LIST_OF_RULES
     NcssMethodCount
     NestedBlockDepth
     NPathComplexity
+    TailleFichier
     TooManyFields
     TooManyMethods
     TooManyParameters
+    NombreAppelsProcedures
+    FrequenceCommentaires
+    NbreSortiesParFonction
     )
 
 BUILD_DYNAMIC_RULES("${LIST_OF_RULES}")

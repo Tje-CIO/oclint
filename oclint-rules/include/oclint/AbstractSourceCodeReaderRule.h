@@ -16,8 +16,9 @@ protected:
 
 public:
     virtual ~AbstractSourceCodeReaderRule();
-
+    virtual void setUp() = 0;
     virtual void eachLine(int lineNumber, std::string line) = 0;
+    virtual void tearDown() = 0;
 };
 
 } // end namespace oclint

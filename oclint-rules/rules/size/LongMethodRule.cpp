@@ -18,7 +18,7 @@ private:
         {
             CompoundStmt *compoundStmt = dyn_cast<CompoundStmt>(decl->getBody());
             int length = getLineCount(compoundStmt->getSourceRange(), _carrier->getSourceManager());
-            int threshold = RuleConfiguration::intForKey("LONG_METHOD", 50);
+            int threshold = RuleConfiguration::intForKey("LONG_METHOD", 200);
             if (length > threshold)
             {
                 string description = "Method with " +

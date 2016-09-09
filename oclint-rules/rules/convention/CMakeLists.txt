@@ -6,12 +6,17 @@ SET(LIST_OF_RULES
     InvertedLogic
     MissingBreakInSwitchStatement
     NonCaseLabelInSwitchStatement
+    NombresMagiques
     ObjCAssignIvarOutsideAccessors
     ParameterReassignment
     PreferEarlyExit
     SwitchStatementsShouldHaveDefault
     CoveredSwitchStatementsDontNeedDefault
     TooFewBranchesInSwitchStatement
+    PasDeSortiePrematuree
+    ReutilisationVocabulaire
+    InstructionParCondition
+    TypeVariable
     )
 
 BUILD_DYNAMIC_RULES("${LIST_OF_RULES}")

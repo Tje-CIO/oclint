@@ -1,4 +1,9 @@
 #include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+
 
 #include "oclint/Results.h"
 #include "oclint/Reporter.h"
@@ -7,11 +12,14 @@
 #include "oclint/ViolationSet.h"
 
 using namespace oclint;
+using namespace std;
 
 class HTMLReporter : public Reporter
 {
+
 public:
-    virtual const std::string name() const override
+
+	virtual const std::string name() const override
     {
         return "html";
     }
@@ -23,13 +31,14 @@ public:
         writeHead(out);
         out << "<body>";
         out << "<h1>OCLint Report</h1>";
-        out << "<hr />";
-        out << "<h2>Summary</h2>";
+        out << "<hr />\n";
+        out << "<h2>Summary</h2>\n";
         writeSummaryTable(out, *results);
-        out << "<hr />";
-        out << "<table><thead><tr><th>File</th><th>Location</th>"
+        out << "<hr />\n";
+        out << "<table><thead><tr><th>Rule ID</th><th>File</th><th>Location</th>"
             << "<th>Rule Name</th><th>Rule Category</th>"
             << "<th>Priority</th><th>Message</th></tr></thead><tbody>";
+        //sort(results->allViolations().begin(), results->allViolations().end(), (*this).sortById);
         for (const auto& violation : results->allViolations())
         {
             writeViolation(out, violation);
@@ -63,10 +72,13 @@ public:
 
     void writeViolation(std::ostream &out, const Violation &violation)
     {
-        out << "<tr><td>" << violation.path << "</td><td>" << violation.startLine
-            << ":" << violation.startColumn << "</td>";
         const RuleBase *rule = violation.rule;
-        out << "<td>" << rule->name() << "</td>"
+        // la largeur de la colonne rule ID est réduite, et son texte est centré
+        out << "<tr><td width=\"75\" align=\"center\">" << rule->id() << "</td>"
+			<< "<td>" << violation.path << "</td>"
+			<< "<td>" << violation.startLine
+            << ":" << violation.startColumn << "</td>"
+         	<< "<td>" << rule->name() << "</td>"
             << "<td>" << rule->category() << "</td>"
             << "<td class='priority" << rule->priority() << "'>"
             << rule->priority() << "</td>"
@@ -76,7 +88,7 @@ public:
     void writeCompilerErrorOrWarning(std::ostream &out,
         const Violation &violation, std::string level)
     {
-        out << "<tr><td>" << violation.path << "</td><td>" << violation.startLine
+        out << "<tr><td></td><td>" << violation.path << "</td><td>" << violation.startLine
             << ":" << violation.startColumn << "</td>";
         out << "<td>compiler " << level << "</td><td></td><td class='cmplr-" << level << "'>"
             << level << "</td><td>" << violation.message << "</td></tr>";
@@ -95,7 +107,7 @@ public:
     {
         for (const auto& violation : violations)
         {
-            out << "<tr><td>" << violation.path << "</td><td>" << violation.startLine
+            out << "<tr><td></td><td>" << violation.path << "</td><td>" << violation.startLine
                 << ":" << violation.startColumn << "</td>";
             out << "<td>clang static analyzer</td><td></td><td class='checker-bug'>"
                 << "checker bug</td><td>" << violation.message << "</td></tr>";
@@ -115,12 +127,13 @@ public:
             << results.numberOfViolationsWithPriority(3) << "</td><td class='cmplr-error'>"
             << results.allErrors().size() << "</td><td class='cmplr-warning'>"
             << results.allWarnings().size() << "</td><td class='checker-bug'>"
-            << results.allCheckerBugs().size() << "</td></tr></tbody></table>";
+            << results.allCheckerBugs().size() << "</td></tr></tbody></table>\n";
     }
 
     void writeHead(std::ostream &out)
     {
         out << "<head>";
+        out << "<meta charset=\"UTF-8\"/>";
         out << "<title>OCLint Report</title>";
         out << "<style type='text/css'>"
             << "                             \
